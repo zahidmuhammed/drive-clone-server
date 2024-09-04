@@ -35,8 +35,8 @@ router.get("/current_user", (req, res) => {
     if (req.user) {
         res.send(req.user);
     } else {
-        res.status(404).json({
-            message: "User Not Found",
+        res.status(401).json({
+            message: "You must be logged in to access this resource",
         });
     }
 });
