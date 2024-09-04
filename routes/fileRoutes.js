@@ -43,10 +43,8 @@ router.post("/upload", ensureAuth, upload.single("file"), async (req, res) => {
         const newFile = new File({
             fileName: file.originalname,
             fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${file.originalname}`,
-            userId: user.id,
+            userId: user?._id || null,
         });
-
-        console.log("S# PArms", s3Response, newFile);
 
         await newFile.save();
 
@@ -59,6 +57,46 @@ router.post("/upload", ensureAuth, upload.single("file"), async (req, res) => {
             error: "File upload failed",
             details: error.message,
         });
+    }
+});
+
+// Route to get files by userId
+router.get("/", ensureAuth, async (req, res) => {
+    const userId = req.user?._id;
+
+    try {
+        // Find files by userId and isDeleted false
+        const files = await File.find({ userId, isDeleted: false });
+
+        res.status(200).json({
+            message: "Files retrieved successfully",
+            files,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to retrieve files",
+            details: error.message,
+        });
+    }
+});
+
+// New route to soft delete a file
+router.delete("/:id", async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        const file = await File.findByIdAndUpdate(
+            fileId,
+            { isDeleted: true },
+            { new: true }
+        );
+
+        if (!file) {
+            return res.status(404).json({ message: "File not found" });
+        }
+
+        res.status(200).json({ message: "File deleted successfully", file });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
     }
 });
 

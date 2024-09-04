@@ -6,7 +6,8 @@ const fileSchema = new mongoose.Schema(
     {
         fileName: { type: String, required: true },
         fileUrl: { type: String, required: true },
-        user: { type: String, required: false },
+        userId: { type: String, required: false },
+        isDeleted: { type: Boolean, default: false },
     },
     {
         timestamps: true,
