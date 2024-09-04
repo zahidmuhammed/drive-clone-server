@@ -22,10 +22,12 @@ passport.use(
                     done(null, user);
                 } else {
                     // If not, create a new user in our database
+
                     user = new User({
                         googleId: profile.id,
                         username: profile.displayName,
                         thumbnail: profile._json.picture,
+                        email: profile._json.email,
                     });
                     await user.save();
                     done(null, user);
