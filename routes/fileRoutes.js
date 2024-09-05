@@ -27,6 +27,14 @@ router.post("/upload", ensureAuth, upload.single("file"), async (req, res) => {
     const file = req.file;
     const user = req.user;
 
+    // Validate file size (limit: 10 MB)
+    const maxSize = 10 * 1024 * 1024; // 10 MB
+    if (file.size > maxSize) {
+        return res
+            .status(400)
+            .json({ error: "File size exceeds 10 MB limit." });
+    }
+
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: file.originalname,
@@ -60,13 +68,20 @@ router.post("/upload", ensureAuth, upload.single("file"), async (req, res) => {
     }
 });
 
-// Route to get files by userId
+// Route to get files by userId with search feature
 router.get("/", ensureAuth, async (req, res) => {
     const userId = req.user?._id;
+    const { search } = req.query; // Get search query from request
 
     try {
-        // Find files by userId and isDeleted false
-        const files = await File.find({ userId, isDeleted: false });
+        // Find files by userId, isDeleted false, and optional search term
+        const query = { userId, isDeleted: false };
+
+        if (search) {
+            query.fileName = { $regex: search, $options: "i" }; // Case-insensitive search
+        }
+
+        const files = await File.find(query);
 
         res.status(200).json({
             message: "Files retrieved successfully",
