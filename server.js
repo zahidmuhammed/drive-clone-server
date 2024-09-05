@@ -1,26 +1,25 @@
-const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const express = require("express");
+const passport = require("passport");
+const session = require("express-session");
+
+require("dotenv").config();
+require("./config/passport-setup");
+
+const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 
 const fileRoutes = require("./routes/fileRoutes");
 const authRoutes = require("./routes/authRoutes");
 
-require("dotenv").config();
-
-const session = require("express-session");
-const passport = require("passport");
-require("./config/passport-setup");
-
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = "http://localhost:3000";
 
 // Middleware
 app.use(
     cors({
-        origin: CLIENT_URL, // Allow requests from your frontend URL
-        credentials: true, //
+        origin: process.env.CLIENT_URL,
+        credentials: true,
     })
 );
 
@@ -49,7 +48,7 @@ mongoose
 
 // Routes
 app.get("/", (req, res) => {
-    res.send("Welcome");
+    res.send("Welcome to the Drive API!");
 });
 
 app.use("/api/files", fileRoutes);
