@@ -81,7 +81,7 @@ router.get("/", ensureAuth, async (req, res) => {
             query.fileName = { $regex: search, $options: "i" }; // Case-insensitive search
         }
 
-        const files = await File.find(query);
+        const files = await File.find(query).sort({ createdAt: -1 });
 
         res.status(200).json({
             message: "Files retrieved successfully",
