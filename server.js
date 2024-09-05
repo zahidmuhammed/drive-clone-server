@@ -38,6 +38,7 @@ app.use(
             secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS
             httpOnly: true, // Prevents JavaScript from accessing the cookie
             maxAge: 24 * 60 * 60 * 1000, // 1 day
+            sameSite: "none",
         },
         store: MongoStore.create({
             mongoUrl: process.env.MONGO_URI,
