@@ -81,7 +81,7 @@ router.get("/", ensureAuth, async (req, res) => {
 });
 
 // New route to soft delete a file
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", ensureAuth, async (req, res) => {
     try {
         const fileId = req.params.id;
         const file = await File.findByIdAndUpdate(
@@ -95,6 +95,31 @@ router.delete("/:id", async (req, res) => {
         }
 
         res.status(200).json({ message: "File deleted successfully", file });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+
+// Route to update file name
+router.patch("/:id", ensureAuth, async (req, res) => {
+    const fileId = req.params.id;
+    const { fileName } = req.body;
+
+    try {
+        const updatedFile = await File.findByIdAndUpdate(
+            fileId,
+            { fileName },
+            { new: true }
+        );
+
+        if (!updatedFile) {
+            return res.status(404).json({ message: "File not found" });
+        }
+
+        res.status(200).json({
+            message: "File name updated successfully",
+            updatedFile,
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }
