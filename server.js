@@ -37,10 +37,14 @@ app.use(
         saveUninitialized: false,
         proxy: true,
         cookie: {
-            secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS
+            secure: process.env.NODE_ENV === "development" ? false : true, // Ensures the cookie is only sent over HTTPS
             httpOnly: false, // Prevents JavaScript from accessing the cookie
             maxAge: 24 * 60 * 60 * 1000, // 1 day
             sameSite: "None",
+            domain:
+                process.env.NODE_ENV === "development"
+                    ? "localhost"
+                    : "drive-clone-client.vercel.app",
         },
         store: MongoStore.create({
             mongoUrl: process.env.MONGO_URI,
