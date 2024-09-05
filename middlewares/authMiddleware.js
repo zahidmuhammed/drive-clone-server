@@ -5,6 +5,6 @@ module.exports.ensureAuth = (req, res, next) => {
         return next();
     }
     res.status(401).json({
-        message: "You must be logged in to access this resource",
+        message: "Authentication is required to access this resource",
     });
 };
