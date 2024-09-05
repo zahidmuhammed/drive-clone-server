@@ -51,7 +51,7 @@ This is a Node.js application built with Express. It serves as a clone of Google
 To start the application, run:
 
 ```bash
-npm install
+npm run dev
 ```
 
 ## License
