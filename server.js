@@ -28,23 +28,21 @@ app.use(
 );
 
 app.use(express.json());
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 app.use(
     session({
-        name: "myDriveCookie",
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
-        proxy: true,
         cookie: {
-            secure: process.env.NODE_ENV === "development" ? false : true, // Ensures the cookie is only sent over HTTPS
+            secure: process.env.NODE_ENV === "production" ? true : false, // Ensures the cookie is only sent over HTTPS
             httpOnly: false, // Prevents JavaScript from accessing the cookie
             maxAge: 24 * 60 * 60 * 1000, // 1 day
-            sameSite: "None",
+            // sameSite: "none",
             domain:
-                process.env.NODE_ENV === "development"
-                    ? "localhost"
-                    : "drive-clone-client.vercel.app",
+                process.env.NODE_ENV === "production"
+                    ? "drive-clone-client.vercel.app"
+                    : "localhost",
         },
         store: MongoStore.create({
             mongoUrl: process.env.MONGO_URI,
