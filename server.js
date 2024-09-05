@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/files", fileRoutes);
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 // Start the server
 app.listen(PORT, () => {
