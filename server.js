@@ -28,15 +28,16 @@ app.use(
 );
 
 app.use(express.json());
-
+app.set("trust proxy", 1);
 app.use(
     session({
         name: "myDriveCookie",
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: true,
+        saveUninitialized: false,
+        proxy: true,
         cookie: {
-            secure: true, // Ensures the cookie is only sent over HTTPS
+            secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS
             httpOnly: false, // Prevents JavaScript from accessing the cookie
             maxAge: 24 * 60 * 60 * 1000, // 1 day
             sameSite: "None",
