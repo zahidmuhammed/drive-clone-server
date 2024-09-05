@@ -31,13 +31,13 @@ app.use(express.json());
 
 app.use(
     session({
-        name: "MyDriveCookie",
+        name: "myDriveCookie",
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: true,
         cookie: {
             secure: true, // Ensures the cookie is only sent over HTTPS
-            httpOnly: true, // Prevents JavaScript from accessing the cookie
+            httpOnly: false, // Prevents JavaScript from accessing the cookie
             maxAge: 24 * 60 * 60 * 1000, // 1 day
             sameSite: "None",
         },
