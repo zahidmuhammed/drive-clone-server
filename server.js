@@ -18,7 +18,12 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(
     cors({
-        origin: process.env.CLIENT_URL,
+        origin: [
+            process.env.CLIENT_URL,
+            "https://drive-clone-client.vercel.app",
+            "http://localhost:3000",
+            "http://localhost:3001",
+        ],
         credentials: true,
     })
 );
