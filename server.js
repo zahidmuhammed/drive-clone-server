@@ -19,7 +19,6 @@ const PORT = process.env.PORT || 5000;
 app.use(
     cors({
         origin: [
-            process.env.CLIENT_URL,
             "https://drive-clone-client.vercel.app",
             "http://localhost:3000",
             "http://localhost:3001",
@@ -35,6 +34,11 @@ app.use(
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
+        cookie: {
+            secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS
+            httpOnly: true, // Prevents JavaScript from accessing the cookie
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+        },
         store: MongoStore.create({
             mongoUrl: process.env.MONGO_URI,
         }),
